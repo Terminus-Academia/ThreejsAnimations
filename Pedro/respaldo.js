@@ -18,9 +18,11 @@ export class InitPovray{
     renderer;
     
     // ---> Camera properties
-    perspectiveParameters = [ 45, screen_x/screen_y, 0.1, 1000 ];
-    orthographicParameters = [ width/2, width/2, height/2, height/2, 1, 1000 ];
-    pos; lok;
+    frustrumVertical;
+    near;
+    far;
+    pos;
+    lok;
 
     // ---> Geometry properties
     sphereParameters = [ 1, 3, 2, 0, 2*Math.PI, 0, Math.PI ];
@@ -35,7 +37,9 @@ export class InitPovray{
                         new THREE.PlaneGeometry( 1, 1, 1, 1 ),
                         new THREE.CircleGeometry( 1, 150, 0, 2*pi ),
                         new THREE.ConeGeometry( 1, 1, 50, 2, false, 0, 2*pi )];
-    geometry;  material;  figure;
+    geometry;
+    material;
+    figure;
 
     constructor(){
         this.scene = new THREE.Scene();
@@ -43,8 +47,14 @@ export class InitPovray{
         this.renderer.setSize( window.innerWidth, window.innerHeight );
     }
 
-// -----------> CAMERA <-------------------------- //
-    // ---> Camera Methods
+    // ---> Set Perspective Camera ---------------------------------------------------
+    setPCamera (FrustrumVertical=45,near=0.1,far=1000){ 
+        this.frustrumVertical = FrustrumVertical;0
+        this.near = near;
+        this.far = far;
+        this.camera = new THREE.PerspectiveCamera(FrustrumVertical,screen_x/screen_y,near,far); 
+    }
+
     updateCam (pos,look){ 
         if (look==null) { look = this.lok; }
         this.camera.position.set( pos.x, pos.y, pos.z );
@@ -54,26 +64,6 @@ export class InitPovray{
     updateRatio(X,Y)
     { his.camera = new THREE.PerspectiveCamera(FrustrumVertical,X/Y,near,far); }
 
-
-        // ---> Set Perspective Camera ---------------------------------------------------
-        setPCamera (pos,look=THREE.Vector3(0,0,0),FrustrumVertical=45,near=0.1,far=1000){ 
-            this.perspectiveParameters = [ FrustrumVertical, screen_x/screen_y, near, far ];
-            this.camera = new THREE.PerspectiveCamera(FrustrumVertical,screen_x/screen_y,near,far);
-            this.updateCam( pos, look ); 
-            this.scene.add( this.camera );
-        }
-
-        // ---> Set Orthographic Camera ---------------------------------------------------
-        setOCamera (pos,look,lateral=width/2, vertical=height/2,near=5,far=1000){
-            this.orthographicParameters = [ lateral, lateral, vertical, vertical, near, far ];
-            this.camera = THREE.OrthographicCamera(lateral,lateral,vertical,vertical,near,far);
-            this.updateCam( pos, look ); 
-            this.scene.add( this.camera );
-        }
-
-// -----------> LIGHT <-------------------------- //
-    // ---> Light Methods
-        
     setLight(Hexcolour,pos){
         this.light = new THREE.DirectionalLight( Hexcolour );
         this.light.position.set( pos.x, pos.y, pos.z ).normalize();
