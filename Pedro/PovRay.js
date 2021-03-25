@@ -41,6 +41,8 @@ export class InitPovray{
         this.scene = new THREE.Scene();
         this.renderer = new THREE.WebGLRenderer( { alpha: true });
         this.renderer.setSize( window.innerWidth, window.innerHeight );
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     }
 
 // -----------> CAMERA <-------------------------- //
